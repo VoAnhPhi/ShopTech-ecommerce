@@ -83,13 +83,13 @@ export default function NewsDetail() {
             <div className="mt-12 pt-8 border-t">
               <h3 className="text-lg font-semibold mb-4">Chia sẻ bài viết</h3>
               <div className="flex space-x-4">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                <button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
                   Facebook
                 </button>
-                <button className="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-500">
+                <button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
                   Twitter
                 </button>
-                <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                <button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
                   WhatsApp
                 </button>
               </div>

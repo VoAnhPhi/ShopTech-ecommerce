@@ -142,8 +142,8 @@ export default function Pagination({ totalPages, currentPage, baseUrl }: Paginat
           onClick={() => createPageUrl(currentPage - 1)}
           disabled={currentPage === 1}
           className={`px-3 py-2 rounded-md ${currentPage === 1
-              ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
-              : 'bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              ? 'bg-white text-gray-400 cursor-not-allowed'
+              : 'bg-white text-gray-700 hover:bg-gray-200 hover:text-gray-900'
             }`}
         >
           <span className="sr-only">Previous</span>
@@ -161,8 +161,8 @@ export default function Pagination({ totalPages, currentPage, baseUrl }: Paginat
               key={`page-${page}`}
               onClick={() => createPageUrl(page as number)}
               className={`px-3 py-2 rounded-md ${currentPage === page
-                  ? 'bg-blue-600 text-white font-medium'
-                  : 'bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                  ? 'bg-[#10375C] text-white font-medium'
+                  : 'bg-white text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                 }`}
             >
               {page}
@@ -175,8 +175,8 @@ export default function Pagination({ totalPages, currentPage, baseUrl }: Paginat
           onClick={() => createPageUrl(currentPage + 1)}
           disabled={currentPage === totalPages}
           className={`px-3 py-2 rounded-md ${currentPage === totalPages
-              ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
-              : 'bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              ? 'bg-white text-gray-400 cursor-not-allowed'
+              : 'bg-white text-gray-700 hover:bg-gray-200 hover:text-gray-900'
             }`}
         >
           <span className="sr-only">Next</span>

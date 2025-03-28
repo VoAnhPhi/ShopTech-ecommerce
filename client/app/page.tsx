@@ -59,11 +59,11 @@ export default function HomePage() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#F4F6FF]">
       <div className="max-w-[1400px] mx-auto px-4">
-        {/* Enhanced Hero Banner Section */}
+        
         <div className="w-full h-[500px] relative rounded-xl overflow-hidden my-6">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 z-10"></div>
+          <div className="absolute inset-0 z-10 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
           <Image
             src="https://images.unsplash.com/photo-1498049794561-7780e7231661?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
             alt="Latest technology devices"
@@ -75,7 +75,7 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold text-white mb-4 max-w-xl">Khám Phá Công Nghệ Mới Nhất</h1>
             <p className="text-xl text-white mb-8 max-w-xl">Ưu đãi hấp dẫn với giảm giá lên đến 50% cho tất cả sản phẩm mới.</p>
             <div className="flex gap-4">
-              <Link href="/product" className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors">
+              <Link href="/product" className="bg-white text-gray-800 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
                 Mua Ngay
               </Link>
               <Link href="/product?hot=1" className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors">
@@ -91,7 +91,7 @@ export default function HomePage() {
             <div className="mt-4 text-right">
               <Link
                 href="/product?hot=1"
-                className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
               >
                 Xem tất cả sản phẩm nổi bật
               </Link>
@@ -234,30 +234,43 @@ export default function HomePage() {
           </div>
 
           <div className="mt-16 text-center">
-            <Link href="/product" className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+            <Link href="/product" className="bg-gray-800 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-900 transition-colors">
               Xem Tất Cả Sản Phẩm
             </Link>
           </div>
         </section>
 
         {/* Newsletter Section */}
-        <section className="py-12 px-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mb-8 text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Đăng Ký Nhận Thông Tin</h2>
+        <section className="relative py-16 px-8 rounded-xl mb-12">
+          {/* Background image */}
+          <div className="absolute inset-0">
+            <Image
+              src="https://images.unsplash.com/photo-1519326844852-704caea5679e?q=80&w=2767&auto=format&fit=crop"
+              alt="newsletter"
+              fill
+              style={{ objectFit: 'cover' }}
+              className=""
+            />
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 max-w-4xl mx-auto text-center text-white">
+            <h2 className="text-4xl font-bold mb-4">Đăng Ký Nhận Thông Tin</h2>
             <p className="text-lg mb-8">Nhận thông tin về sản phẩm mới và ưu đãi đặc biệt</p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <input
                 type="email"
                 placeholder="Nhập email của bạn"
-                className="px-6 py-3 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-white w-full sm:w-96"
+                className="px-6 py-3 rounded-full text-white focus:outline-none focus:ring-2 focus:ring-white w-full sm:w-96"
               />
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-blue-50">
+              <button className="bg-white text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all duration-200">
                 Đăng Ký
               </button>
             </div>
           </div>
         </section>
+
       </div>
     </div>
   );

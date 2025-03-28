@@ -169,7 +169,7 @@ export default function Checkout() {
                                 </div>
                             </div>
                             <h1 className='text-red-500 text-center mb-4 font-bold text-xl' ref={thongbaoRef}></h1>
-                            <button type="submit" className="block w-full bg-blue-600 text-white py-3 px-4 rounded-md text-center font-medium hover:bg-blue-700 mb-4" onClick={submitDuLieu}>
+                            <button type="submit" className="block w-full bg-gray-800 text-white py-3 px-4 rounded-md text-center font-medium hover:bg-gray-900 mb-4" onClick={submitDuLieu}>
                                 Place Order
                             </button>
                         </form>

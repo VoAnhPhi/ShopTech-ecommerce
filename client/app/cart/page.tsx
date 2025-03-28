@@ -83,7 +83,7 @@ export default function Cart() {
                             <Link href="/" className="bg-white border border-gray-300 px-6 py-3 rounded-md text-center hover:bg-gray-50">
                                 Continue Shopping
                             </Link>
-                            <Link href="/cart/checkout" className="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700">
+                            <Link href="/cart/checkout" className="bg-gray-800 text-white px-6 py-3 rounded-md text-center hover:bg-gray-900">
                                 Proceed to Checkout
                             </Link>
                         </div>

@@ -22,8 +22,8 @@ export default function Show1SP(props: any) {
                 <p className="font-semibold">Lượt xem: {sp.luot_xem}</p>
             </div>
             <div className="flex justify-between mt-4">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Mua hàng</button>
-                <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" onClick={() => dispatch(addToCart(sp))}>Thêm vào giỏ hàng</button>
+                <button className="bg-[#10375C] text-white px-4 py-2 rounded hover:bg-[#F3C623] hover:text-[#10375C] transition-colors duration-200">Mua hàng</button>
+                <button className="bg-[#F3C623] text-[#10375C] px-4 py-2 rounded hover:bg-[#10375C] hover:text-white transition-colors duration-200" onClick={() => dispatch(addToCart(sp))}>Thêm vào giỏ hàng</button>
             </div>
         </div>
     );

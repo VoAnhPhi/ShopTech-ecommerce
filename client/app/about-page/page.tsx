@@ -239,7 +239,7 @@ export default function AboutPage() {
           Chúng tôi luôn tìm kiếm những người tài năng và đam mê công nghệ để gia nhập đội ngũ ShopTech.
           Nếu bạn muốn làm việc trong một môi trường năng động và sáng tạo, hãy liên hệ với chúng tôi.
         </p>
-        <button className="bg-white text-blue-600 hover:bg-gray-100 transition-colors duration-200 font-bold py-3 px-8 rounded-full text-lg">
+        <button className="bg-white text-gray-800 hover:bg-gray-100 transition-colors duration-200 font-bold py-3 px-8 rounded-full text-lg">
           Cơ Hội Nghề Nghiệp
         </button>
       </motion.section>

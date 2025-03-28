@@ -114,11 +114,11 @@ export default function ProductDetail() {
 
                     {/* Nút mua hàng */}
                     <div className="flex gap-4">
-                        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-200">
+                        <button className="flex-1 bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold transition duration-200">
                             <i className="fas fa-shopping-cart mr-2"></i>
                             Thêm vào giỏ hàng
                         </button>
-                        <button className="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-200">
+                        <button className="flex-1 bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold transition duration-200">
                             <i className="fas fa-bolt mr-2"></i>
                             Mua ngay
                         </button>
