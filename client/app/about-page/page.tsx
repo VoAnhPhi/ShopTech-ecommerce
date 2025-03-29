@@ -22,27 +22,27 @@ const staggerContainer = {
 export default function AboutPage() {
   const teamMembers = [
     {
-      name: 'Nguyễn Văn A',
+      name: 'Nguyễn Thanh Hoa',
       role: 'CEO & Founder',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80',
+      image: 'https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?q=80&w=2688&auto=format&fit=crop',
       bio: 'Với hơn 15 năm kinh nghiệm trong ngành công nghệ, anh A đã xây dựng ShopTech từ một cửa hàng nhỏ thành một trong những nhà bán lẻ công nghệ hàng đầu.'
     },
     {
-      name: 'Trần Thị B',
+      name: 'Mai Anh Tới',
       role: 'COO',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80',
+      image: 'https://images.unsplash.com/photo-1590086782957-93c06ef21604?q=80&w=2574&auto=format&fit=crop',
       bio: 'Chị B là người đứng sau sự vận hành suôn sẻ của ShopTech. Với kinh nghiệm quản lý chuỗi cung ứng, chị đảm bảo mọi sản phẩm đều đạt chất lượng cao nhất.'
     },
     {
-      name: 'Lê Văn C',
+      name: 'Nguyễn Văn Cao',
       role: 'CTO',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80',
+      image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2574&auto=format&fit=crop',
       bio: 'Anh C là chuyên gia công nghệ với hơn 10 năm kinh nghiệm. Anh chịu trách nhiệm về mọi khía cạnh kỹ thuật của ShopTech, từ website đến hệ thống quản lý kho.'
     },
     {
-      name: 'Phạm Thị D',
+      name: 'Trần Thanh Tú',
       role: 'Marketing Director',
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80',
+      image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2574&auto=format&fit=crop',
       bio: 'Chị D là người đứng sau những chiến dịch marketing thành công của ShopTech. Với sự sáng tạo và hiểu biết sâu sắc về thị trường, chị đã giúp ShopTech xây dựng thương hiệu mạnh mẽ.'
     }
   ];
@@ -51,22 +51,22 @@ export default function AboutPage() {
     {
       title: 'Chất lượng',
       description: 'Chúng tôi cam kết cung cấp những sản phẩm công nghệ chất lượng cao nhất, được kiểm tra kỹ lưỡng trước khi đến tay khách hàng.',
-      icon: '🏆'
+      icon: ''
     },
     {
       title: 'Đổi mới',
       description: 'Luôn cập nhật những xu hướng công nghệ mới nhất, đảm bảo khách hàng tiếp cận được với những sản phẩm tiên tiến nhất.',
-      icon: '💡'
+      icon: ''
     },
     {
       title: 'Tận tâm',
       description: 'Đặt khách hàng làm trung tâm, chúng tôi luôn lắng nghe và đáp ứng mọi nhu cầu với dịch vụ chăm sóc khách hàng tận tâm.',
-      icon: '❤️'
+      icon: ''
     },
     {
       title: 'Trách nhiệm',
       description: 'Chúng tôi cam kết kinh doanh có trách nhiệm, quan tâm đến môi trường và cộng đồng thông qua các hoạt động xã hội.',
-      icon: '🌍'
+      icon: ''
     }
   ];
 
@@ -121,10 +121,10 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="md:w-1/2 relative h-[400px]">
-            <div className="absolute w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg transform rotate-3"></div>
+            <div className="absolute w-full h-full bg-gradient-to-r rounded-lg transform rotate-3"></div>
             <div className="absolute w-full h-full overflow-hidden rounded-lg">
               <Image
-                src="https://images.unsplash.com/photo-1581092921461-39b9d08a9b21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop"
                 alt="ShopTech store"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -228,20 +228,29 @@ export default function AboutPage() {
 
       {/* CTA Section */}
       <motion.section
-        className="text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white p-12 rounded-lg max-w-[1400px] mx-auto px-4"
+        className="text-center text-white p-12 rounded-lg max-w-[1400px] mx-auto px-4 relative h-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
       >
-        <h2 className="text-3xl font-bold mb-6">Hãy Trở Thành Một Phần Của Chúng Tôi</h2>
-        <p className="text-xl mb-8 max-w-3xl mx-auto">
-          Chúng tôi luôn tìm kiếm những người tài năng và đam mê công nghệ để gia nhập đội ngũ ShopTech.
-          Nếu bạn muốn làm việc trong một môi trường năng động và sáng tạo, hãy liên hệ với chúng tôi.
-        </p>
-        <button className="bg-white text-gray-800 hover:bg-gray-100 transition-colors duration-200 font-bold py-3 px-8 rounded-full text-lg">
-          Cơ Hội Nghề Nghiệp
-        </button>
+        <div className="absolute inset-0 h-full">
+          <Image
+            src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=2670&auto=format&fit=crop"
+            alt="banner"
+            fill
+            className="object-cover "/>
+          <div className="relative z-10 flex flex-col items-center justify-center h-full bg-gradient-to-r from-black/50 to-black/20">
+            <h2 className="text-3xl font-bold mb-6  z-10">Hãy Trở Thành Một Phần Của Chúng Tôi</h2>
+            <p className="text-xl mb-8 max-w-3xl mx-auto  z-10">
+              Chúng tôi luôn tìm kiếm những người tài năng và đam mê công nghệ để gia nhập đội ngũ ShopTech.
+              Nếu bạn muốn làm việc trong một môi trường năng động và sáng tạo, hãy liên hệ với chúng tôi.
+            </p>
+            <button className="bg-white text-gray-800 hover:bg-gray-100 transition-colors duration-200 font-bold py-3 px-8 rounded-full text-lg z-10">
+              Cơ Hội Nghề Nghiệp
+            </button>
+          </div>
+        </div>
       </motion.section>
     </div>
   );

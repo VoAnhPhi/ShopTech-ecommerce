@@ -26,13 +26,23 @@ export default function NewsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-    
-      <div className="w-full h-64 bg-blue-600 text-white flex items-center justify-center">
-        <div className="max-w-[1400px] mx-auto px-4 text-center">
+
+      <div className="w-full h-64 bg-blue-600 text-white flex items-center justify-center relative">
+        <Image
+          src="https://images.unsplash.com/photo-1503694978374-8a2fa686963a?q=80&w=2669&auto=format&fit=crop"
+          alt="news-banner"
+          fill
+          className="absolute object-cover z-0"
+          style={{ objectFit: 'cover' }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/20 z-0" />
+        <div className="max-w-[1400px] mx-auto px-4 text-center z-10">
           <h1 className="text-4xl font-bold mb-4">Tin Tức & Bài Viết</h1>
           <p className="text-xl">Cập nhật những thông tin mới nhất về công nghệ và sản phẩm</p>
         </div>
       </div>
+
 
       <div className="max-w-[1400px] mx-auto px-4 py-8">
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -52,7 +62,7 @@ export default function NewsPage() {
                   <div className="w-full md:w-auto">
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                      className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-blue-700 transition"
                     >
                       Tìm kiếm
                     </button>
@@ -62,7 +72,7 @@ export default function NewsPage() {
 
             </div>
             <div className="w-full md:w-1/2 flex flex-wrap gap-2">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Tất cả</button>
+              <button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Tất cả</button>
               {loai_tin.map((category: iLoaiTin, index: number) => (
                 <button
                   key={index}
@@ -83,7 +93,7 @@ export default function NewsPage() {
 
                 {tin.map((news: iTinTuc) =>
                   <div key={news.id} className="relative h-80">
-                    <Image src={news.hinh} alt={news.tieu_de} fill style={{ objectFit: 'cover' }} />
+                    <Image src={news.hinh} alt={news.tieu_de} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                     <div className="p-6">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-sm text-blue-600 font-medium">{news.ten_loai}</span>
@@ -112,6 +122,7 @@ export default function NewsPage() {
                       src={news.hinh}
                       alt={news.tieu_de}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       style={{ objectFit: 'cover' }}
                     />
                   </div>
@@ -165,7 +176,7 @@ export default function NewsPage() {
           <div className="flex justify-center mt-10">
             <div className="flex space-x-2">
               <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">Trước</button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">1</button>
+              <button className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">1</button>
               <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">2</button>
               <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">3</button>
               <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">Sau</button>

@@ -86,6 +86,27 @@ app.get("/api/spmoi/:sosp?", async (req, res) => {
     res.json(sp_arr);
 })
 
+// sản phẩm cùng loại
+app.get("/api/products/same-category/:categoryId", async (req, res) => {
+    try {
+        const categoryId = Number(req.params.categoryId);
+        const limit = Number(req.query.limit) || 4;
+        const offset = Number(req.query.offset) || 0;
+
+        const products = await SanPhamModel.findAll({
+            where: { id_loai: categoryId, an_hien: 1 },
+            order: [literal('RAND()')],
+            offset: offset,
+            limit: limit
+        });
+
+        res.json(products);
+    } catch (error) {
+        console.error("Error fetching products by category:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 // API phân trang cho tất cả sản phẩm
 app.get("/api/products/page/:page", async (req, res) => {
     try {
@@ -495,16 +516,26 @@ app.get("/api/loai/:id", async (req, res) => {
 
 // đặt hàng
 app.post('/api/luudonhang', async (req, res) => {
-    let { ho_ten, email, ghi_chu, dia_chi } = req.body
-    await DonHangModel.create({
-        ho_ten: ho_ten, email: email, ghi_chu: ghi_chu, dia_chi: dia_chi,
-    })
-        .then(function (item) {
-            res.json({ "thong_bao": "Đã tạo đơn hàng", "dh": item });
+    try {
+        let { ho_ten, email, ghi_chu, dia_chi } = req.body
+
+        if (!ho_ten || !email || !dia_chi) {
+            res.status(400).json({ error: "Missing required fields" });
+            return;
+        }
+
+        const don_hang = await DonHangModel.create({
+            ho_ten: ho_ten, email: email, ghi_chu: ghi_chu, dia_chi: dia_chi,
         })
-        .catch(function (err) {
-            res.json({ "thong_bao": "Lỗi tạo đơn hàng", err })
+
+        return res.json({
+            thong_bao: 'Đã tạo đơn hàng',
+            dh: don_hang
         });
+    } catch (error) {
+        console.error("Error creating order:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 // lưu giỏ hàng

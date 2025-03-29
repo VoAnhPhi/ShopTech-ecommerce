@@ -3,6 +3,7 @@ import { ILoai, ISanPham } from "../data";
 import ShowCategory from "../components/category";
 import HomeProduct from "../components/homeProuct";
 import Pagination from "../components/Pagination";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -105,7 +106,16 @@ export default function ProductPage() {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <div className="w-full h-32 bg-blue-500 text-white flex items-center justify-center text-2xl font-bold">{pageTitle}</div>
+
+            <div className="relative w-full h-118 bg-[#161616] text-white flex items-center justify-center text-2xl font-bold">
+                <Image
+                    src="https://images.unsplash.com/photo-1613258176465-eb77f3a050d2?q=80&w=2669&auto=format&fit=crop"
+                    alt="banner"
+                    fill
+                    className="absolute object-contain"/>
+
+                <h2 className="text-4xl font-bold mb-4 z-10">{pageTitle}</h2>
+            </div>
 
             <section className="py-8 px-4 flex gap-6 max-w-[1400px] mx-auto pt-26" ref={productRef}>
                 <aside className="bg-white p-4 shadow-md w-1/4 rounded">

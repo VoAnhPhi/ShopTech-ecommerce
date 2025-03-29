@@ -61,7 +61,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F4F6FF]">
       <div className="max-w-[1400px] mx-auto px-4">
-        
+
         <div className="w-full h-[500px] relative rounded-xl overflow-hidden my-6">
           <div className="absolute inset-0 z-10 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
           <Image
@@ -102,68 +102,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="py-8 px-4 flex gap-6 pt-26" ref={productRef}>
-          <aside className="bg-white p-4 shadow-md w-1/4 rounded">
-            <h3 className="text-xl font-semibold mb-4">Lọc sản phẩm</h3>
-            <div className="mb-4">
-              <h4 className="font-medium mb-4">Theo danh mục</h4>
-              <ul className="grid grid-cols-2 gap-2">
-                {category_arr.map((category: ILoai) => <ShowCategory key={category.id} category={category}></ShowCategory>)}
-              </ul>
-            </div>
-            <div className="mb-4">
-              <h4 className="font-medium">Theo giá</h4>
-              <input type="range" min="0" max="50000000" className="w-full" />
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>0 VNĐ</span>
-                <span>50,000,000 VNĐ</span>
-              </div>
-            </div>
-            <div className="mb-4">
-              <h4 className="font-medium mb-4">Sản phẩm mới</h4>
-              <Link href="/product" className="text-blue-500 hover:underline">Xem ngay</Link>
-            </div>
-            <div>
-              <h4 className="font-medium mb-4">Mua nhiều</h4>
-              <Link href="/product?sort=popular" className="text-blue-500 hover:underline">Xem ngay</Link>
-            </div>
-          </aside>
-
-          <div className="w-3/4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">Tất cả sản phẩm</h2>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">
-                  Hiển thị {sp_moi.length} / {pagination.total} sản phẩm
-                </span>
-                <Link
-                  href="/page-product"
-                  className="text-blue-600 text-sm hover:underline"
-                >
-                  Xem tất cả
-                </Link>
-              </div>
-            </div>
-
-            {sp_moi.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sp_moi.map((sp: ISanPham) => <HomeProduct key={sp.id} sp={sp}></HomeProduct>)}
-              </div>
-            ) : (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-                <p className="text-yellow-700">Không tìm thấy sản phẩm nào.</p>
-              </div>
-            )}
-
-            <Pagination
-              totalPages={pagination.totalPages}
-              currentPage={pagination.currentPage}
-              baseUrl="/?"
-            />
-          </div>
-        </section>
-
-        {/* Device Showcase Section */}
         <section className="py-16 px-4 bg-white rounded-xl my-8 shadow-sm">
           <h2 className="text-3xl font-bold text-center mb-12">Khám Phá Thiết Bị Công Nghệ</h2>
 
@@ -240,8 +178,69 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="py-8 px-4 flex gap-6 pt-26" ref={productRef}>
+          <aside className="bg-white p-4 shadow-md w-1/4 rounded">
+            <h3 className="text-xl font-semibold mb-4">Lọc sản phẩm</h3>
+            <div className="mb-4">
+              <h4 className="font-medium mb-4">Theo danh mục</h4>
+              <ul className="grid grid-cols-2 gap-2">
+                {category_arr.map((category: ILoai) => <ShowCategory key={category.id} category={category}></ShowCategory>)}
+              </ul>
+            </div>
+            <div className="mb-4">
+              <h4 className="font-medium">Theo giá</h4>
+              <input type="range" min="0" max="50000000" className="w-full" />
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>0 VNĐ</span>
+                <span>50,000,000 VNĐ</span>
+              </div>
+            </div>
+            <div className="mb-4">
+              <h4 className="font-medium mb-4">Sản phẩm mới</h4>
+              <Link href="/product" className="text-blue-500 hover:underline">Xem ngay</Link>
+            </div>
+            <div>
+              <h4 className="font-medium mb-4">Mua nhiều</h4>
+              <Link href="/product?sort=popular" className="text-blue-500 hover:underline">Xem ngay</Link>
+            </div>
+          </aside>
+
+          <div className="w-3/4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">Tất cả sản phẩm</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">
+                  Hiển thị {sp_moi.length} / {pagination.total} sản phẩm
+                </span>
+                <Link
+                  href="/page-product"
+                  className="text-blue-600 text-sm hover:underline"
+                >
+                  Xem tất cả
+                </Link>
+              </div>
+            </div>
+
+            {sp_moi.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sp_moi.map((sp: ISanPham) => <HomeProduct key={sp.id} sp={sp}></HomeProduct>)}
+              </div>
+            ) : (
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                <p className="text-yellow-700">Không tìm thấy sản phẩm nào.</p>
+              </div>
+            )}
+
+            <Pagination
+              totalPages={pagination.totalPages}
+              currentPage={pagination.currentPage}
+              baseUrl="/?"
+            />
+          </div>
+        </section>
+
         {/* Newsletter Section */}
-        <section className="relative py-16 px-8 rounded-xl mb-12">
+        <section className="relative py-16 px-8 rounded-xl mb-12 mt-16 border-2 rounded-sm overflow-hidden">
           {/* Background image */}
           <div className="absolute inset-0">
             <Image
@@ -254,7 +253,7 @@ export default function HomePage() {
           </div>
 
           {/* Content */}
-          <div className="relative z-10 max-w-4xl mx-auto text-center text-white">
+          <div className="relative z-10 max-w-4xl mx-auto text-center text-white m-16">
             <h2 className="text-4xl font-bold mb-4">Đăng Ký Nhận Thông Tin</h2>
             <p className="text-lg mb-8">Nhận thông tin về sản phẩm mới và ưu đãi đặc biệt</p>
 

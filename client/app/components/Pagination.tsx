@@ -135,7 +135,7 @@ export default function Pagination({ totalPages, currentPage, baseUrl }: Paginat
   //   </div>
   // );
   return (
-    <div className="flex justify-center my-8">
+    <div className="flex justify-center my-8 mt-14">
       <nav className="flex items-center space-x-1">
         {/* Previous button */}
         <button

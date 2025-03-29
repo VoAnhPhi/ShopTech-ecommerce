@@ -3,12 +3,17 @@ import Link from 'next/link'
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store';
 import { ICart } from '@/app/data';
-import Image from 'next/image';
-import { removeFromCart, updateQuantity } from '@/lib/cartSlice';
 import { useRef } from 'react';
-
+import useDebounce from '@/app/useDebouce';
+import { useState } from 'react';
 
 export default function Checkout() {
+
+    const [submitClicked, setSubmitClicked] = useState(false);
+    const [allowSubmit, setAllowSubmit] = useState(true);
+
+    const debouncedSubmit = useDebounce(allowSubmit, 3000);
+
     const cartItems: ICart[] = useSelector((state: RootState) => state.cart.products_array);
     const cartTotal = cartItems.reduce((total, item) => total + (item.gia_mua * item.so_luong), 0);
     const dispatch = useDispatch();
@@ -24,26 +29,46 @@ export default function Checkout() {
     let phoneRef = useRef<HTMLInputElement>(null)
     let addressRef = useRef<HTMLInputElement>(null)
 
-    const submitDuLieu = () => {
+    const submitDuLieu = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        if (submitClicked || !debouncedSubmit) return;
+        setAllowSubmit(false);
+        setSubmitClicked(true);
+
         let ht = hotenRef.current?.value
         let email = emailRef.current?.value
         let ghichu = ghichuRef.current?.value
-        let address = addressRef.current?.value 
+        let address = addressRef.current?.value
         let phone = phoneRef.current?.value
+
         if (ht?.trim() == "") {
-            thongbaoRef.current!.innerHTML = "Bạn chưa nhập họ tên"
             // hotenRef.current!.style.backgroundColor = "yellow";
-            hotenRef.current!.focus(); return;
+            thongbaoRef.current!.innerHTML = "Bạn chưa nhập họ tên"
+            hotenRef.current!.focus();
+            setSubmitClicked(false);
+            setAllowSubmit(true); // Cho thử lại ngay
+            return;
         } else if (email?.trim() == "") {
             thongbaoRef.current!.innerHTML = "Bạn chưa nhập email"
-            emailRef.current!.focus(); return;
+            emailRef.current!.focus();
+            setSubmitClicked(false);
+            setAllowSubmit(true); // Cho thử lại ngay
+            return;
         } else if (phone?.trim() == "") {
-            thongbaoRef.current!.innerHTML = "Bạn chưa nhập địa chỉ giao hàng"
-            phoneRef.current!.focus(); return;
+            thongbaoRef.current!.innerHTML = "Bạn chưa nhập số điện thoại"
+            phoneRef.current!.focus();
+            setSubmitClicked(false);
+            setAllowSubmit(true); // Cho thử lại ngay
+            return;
         } else if (address?.trim() == "") {
             thongbaoRef.current!.innerHTML = "Bạn chưa nhập địa chỉ giao hàng"
-            addressRef.current!.focus(); return;
-        } else hotenRef.current!.style.backgroundColor = "white";
+            addressRef.current!.focus();
+            setSubmitClicked(false);
+            setAllowSubmit(true); // Cho thử lại ngay
+            return;
+        }
+        // else hotenRef.current!.style.backgroundColor = "white";
 
         let opt = {
             method: "post",
@@ -51,17 +76,24 @@ export default function Checkout() {
             headers: { 'Content-Type': 'application/json' }
         }
         fetch("http://localhost:3000/api/luudonhang", opt)
-            .then(res => res.json()).then(data => {
+            .then(res => res.json())
+            .then(async (data) => {
                 thongbaoRef.current!.innerHTML = data.thong_bao;
 
-                if (data.dh != undefined) {
+                if (data.dh) {
                     let id_dh = data.dh.id;
-                    luuchitietdonhang(id_dh, cartItems);
+                    await luuchitietdonhang(id_dh, cartItems);
+                } else {
+                    thongbaoRef.current!.innerHTML = "Có lỗi gì đó, xem trong log"
+                    setSubmitClicked(false);
+                    setAllowSubmit(true);
                 }
             })
             .catch(err => {
                 console.log("Lỗi request lưu dh:", err);
                 thongbaoRef.current!.innerHTML = "Có lỗi gì đó, xem trong log"
+                setSubmitClicked(false);
+                setAllowSubmit(true);
             })
     }
 
@@ -82,7 +114,7 @@ export default function Checkout() {
     }
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+            <h1 className="text-3xl font-bold mb-6">Thanh toán</h1>
 
             {cartItems.length === 0 ? (
                 <div className="bg-gray-50 p-6 rounded-lg text-center">
@@ -169,15 +201,20 @@ export default function Checkout() {
                                 </div>
                             </div>
                             <h1 className='text-red-500 text-center mb-4 font-bold text-xl' ref={thongbaoRef}></h1>
-                            <button type="submit" className="block w-full bg-gray-800 text-white py-3 px-4 rounded-md text-center font-medium hover:bg-gray-900 mb-4" onClick={submitDuLieu}>
-                                Place Order
+                            <button
+                                type="submit"
+                                className="block w-full bg-gray-800 text-white py-3 px-4 rounded-md text-center font-medium hover:bg-gray-900 mb-4"
+                                onClick={submitDuLieu}
+                                disabled={submitClicked || !debouncedSubmit}
+                            >
+                                {(submitClicked || !debouncedSubmit) ? 'Đang xử lý...' : 'Thanh toán'}
                             </button>
                         </form>
 
                     </div>
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-lg shadow p-6 sticky top-6">
-                            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                            <h2 className="text-xl font-semibold mb-4">Tóm tắt đơn hàng</h2>
 
                             {/* Danh sách sản phẩm */}
                             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2">
@@ -204,15 +241,15 @@ export default function Checkout() {
                             {/* Thông tin tổng kết đơn hàng */}
                             <div className="border-t border-gray-200 pt-4 mb-4">
                                 <div className="flex justify-between mb-2">
-                                    <span className="text-gray-600">Items ({cartItems.length}):</span>
+                                    <span className="text-gray-600">Sản phẩm ({cartItems.length}):</span>
                                     <span>{cartTotal.toLocaleString('vi-VN')} VNĐ</span>
                                 </div>
                                 <div className="flex justify-between mb-2">
-                                    <span className="text-gray-600">Shipping:</span>
+                                    <span className="text-gray-600">Phí vận chuyển:</span>
                                     <span>{shipping.toLocaleString('vi-VN')} VNĐ</span>
                                 </div>
                                 <div className="flex justify-between mb-2">
-                                    <span className="text-gray-600">Tax:</span>
+                                    <span className="text-gray-600">Thuế:</span>
                                     <span>{tax.toLocaleString('vi-VN')} VNĐ</span>
                                 </div>
                             </div>
@@ -226,7 +263,7 @@ export default function Checkout() {
                                 href="/cart"
                                 className="block w-full text-center text-blue-600 hover:underline"
                             >
-                                Return to Cart
+                                Quay lại giỏ hàng
                             </Link>
                         </div>
                     </div>

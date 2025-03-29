@@ -130,8 +130,14 @@ export default function CategoryProductsPage() {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <div className="w-full h-32 bg-blue-500 text-white flex items-center justify-center text-2xl font-bold">
-                {pageTitle}
+            <div className="relative w-full h-118 bg-[#161616] text-white flex items-center justify-center text-2xl font-bold">
+                <Image
+                    src="https://images.unsplash.com/photo-1559163499-413811fb2344?q=80&w=2670&auto=format&fit=crop"
+                    alt="banner"
+                    fill
+                    className="absolute object-cover"/>
+
+                <h2 className="text-4xl font-bold mb-4 z-10">{pageTitle}</h2>
             </div>
 
             <section className="py-8 px-4 flex gap-6 max-w-[1400px] mx-auto pt-26" ref={productRef}>

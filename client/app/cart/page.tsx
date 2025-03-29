@@ -14,13 +14,13 @@ export default function Cart() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6">Your Shopping Cart</h1>
+            <h1 className="text-3xl font-bold mb-6">Giỏ hàng</h1>
 
             {cartItems.length === 0 ? (
                 <div className="bg-gray-50 p-6 rounded-lg text-center">
-                    <p className="text-lg mb-4">Your cart is empty</p>
+                    <p className="text-lg mb-4">Giỏ Hàng Của Bạn Đang Trống</p>
                     <Link href="/" className="text-blue-600 hover:underline">
-                        Continue Shopping
+                        Tiếp tục mua hàng
                     </Link>
                 </div>
             ) : (
@@ -77,14 +77,14 @@ export default function Cart() {
                             <span>{cartTotal.toLocaleString("vi-VN")}</span>
                         </div>
                         <div className="flex justify-between text-sm text-gray-500 mb-4">
-                            <span>Shipping & taxes calculated at checkout</span>
+                            <span>Phí vận chuyển và thuế được tính ở thanh toán</span>
                         </div>
                         <div className="flex flex-col sm:flex-row justify-between gap-4">
                             <Link href="/" className="bg-white border border-gray-300 px-6 py-3 rounded-md text-center hover:bg-gray-50">
-                                Continue Shopping
+                                Tiếp tục mua hàng
                             </Link>
                             <Link href="/cart/checkout" className="bg-gray-800 text-white px-6 py-3 rounded-md text-center hover:bg-gray-900">
-                                Proceed to Checkout
+                                Thanh toán
                             </Link>
                         </div>
                     </div>
