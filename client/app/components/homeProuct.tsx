@@ -3,6 +3,7 @@ import { ISanPham } from "../data";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/lib/cartSlice";
 
+
 export default function HomeProduct(props: any) {
     let sp = props.sp as ISanPham;
     const dispatch = useDispatch();
@@ -11,7 +12,7 @@ export default function HomeProduct(props: any) {
         <div className="bg-white p-4 shadow rounded max-w-screen-lg mx-auto">
             <img src={sp.hinh} alt="Product" className="w-full h-52 object-cover rounded mb-4 transition-transform duration-300 hover:scale-105"/>
             <h3 className="text-base font-bold mt-2 mb-4 hover:text-[#10375C] text-center line-clamp-1">
-                <Link href={`/product/detail/${sp.id}`}>{sp.ten_sp}</Link>
+                <Link href={`/product/detail/${sp.slug}`}>{sp.ten_sp}</Link>
             </h3>
             <div className="flex items-center justify-between mb-4">
                 <p className="text-base font-bold">Giá: <span className="text-[#10375C]">{sp.gia_km.toLocaleString("vi-VN")} VNĐ</span></p>

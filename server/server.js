@@ -8,6 +8,7 @@ app.use(cors()); //cho phép mọi nguồi bên ngoài request đến ứnd dụ
 
 const { SanPhamModel, LoaiModel, TinTucModel, LoaiTinModel, DonHangModel, DonHangChiTietModel } = require("./config/db"); //các model lấy database
 const { Op } = require("sequelize"); // Import Op từ Sequelize để sử dụng các toán tử như LIKE
+const { literal } = require("sequelize");
 
 //routes
 app.get("/api/loai", async (req, res) => {
@@ -18,15 +19,36 @@ app.get("/api/loai", async (req, res) => {
     res.json(loai_arr);
 })
 
-app.get("/api/news", async (req, res) => {
+// tin tức
+app.get("/api/news/:limit/page/:page", async (req, res) => {
+    const limit = Number(req.params.limit) || 10;
+    const page = Number(req.params.page) || 1;
+    const offset = (page - 1) * limit;
+
+    const total = await TinTucModel.count({
+        where: { an_hien: 1 }
+    });
+
+    const totalPages = Math.ceil(total / limit);
     const news_arr = await TinTucModel.findAll({
         where: { an_hien: 1 },
         order: [['ngay', 'DESC']],
+        offset: offset,
+        limit: limit
     })
-    res.json(news_arr);
+
+    res.json({
+        news: news_arr,
+        pagination: {
+            total: total,
+            totalPages: totalPages,
+            currentPage: page,
+            limit: limit
+        }
+    });
+    // console.log(news_arr);
 })
 
-// tin tức
 app.get("/api/news/loai/:id", async (req, res) => {
     const id = Number(req.params.id)
     if (isNaN(id)) {
@@ -64,6 +86,25 @@ app.get("/api/news/:slug", async (req, res) => {
         return;
     }
     res.json(news);
+})
+
+// tin tức liên quan 
+app.get("/api/news/related/:id", async (req, res) => {
+    const id = Number(req.params.id)
+    if (isNaN(id)) {
+        res.status(400).json({ error: "Invalid news ID" });
+        return;
+    }
+    const relatedNews = await TinTucModel.findAll({
+        where: { id_loai: id },
+        order: [['ngay', 'DESC']],
+        limit: 3,
+    })
+    if (relatedNews.length === 0) {
+        res.status(404).json({ error: "No related news found" });
+        return;
+    }
+    res.json(relatedNews);
 })
 
 app.get("/api/sphot/:sosp?", async (req, res) => {
@@ -476,14 +517,30 @@ app.get("/api/search/:key/page/:page", async (req, res) => {
     }
 });
 
-app.get("/api/sp/:id", async (req, res) => {
-    const id = Number(req.params.id)
-    if (isNaN(id)) {
-        res.status(400).json({ error: "Invalid product ID" });
+// app.get("/api/sp/:id", async (req, res) => {
+//     const id = Number(req.params.id)
+//     if (isNaN(id)) {
+//         res.status(400).json({ error: "Invalid product ID" });
+//         return;
+//     }
+//     const sp = await SanPhamModel.findOne({
+//         where: { id: id },
+//     })
+//     if (!sp) {
+//         res.status(404).json({ error: "Sản phẩm đã bị lỗi, vui lòng thử lại sau" });
+//         return;
+//     }
+//     res.json(sp);
+// })
+
+app.get("/api/sp/:slug", async (req, res) => {
+    const slug = req.params.slug
+    if (!slug) {
+        res.status(400).json({ error: "Invalid product slug" });
         return;
     }
     const sp = await SanPhamModel.findOne({
-        where: { id: id },
+        where: { slug: slug },
     })
     if (!sp) {
         res.status(404).json({ error: "Sản phẩm đã bị lỗi, vui lòng thử lại sau" });
@@ -491,6 +548,41 @@ app.get("/api/sp/:id", async (req, res) => {
     }
     res.json(sp);
 })
+
+app.post("/api/sp/:slug", async (req, res) => {
+    const slug = req.params.slug
+    const sp = await SanPhamModel.findOne({ where: { slug } });
+    if (!sp) {
+        res.status(400).json({ error: "Invalid product slug" });
+        return;
+    }
+    const currentLuotXem = sp.luot_xem ?? 0;
+    const newLuotXem = currentLuotXem + 1;
+
+    await SanPhamModel.update({ luot_xem: newLuotXem }, { where: { slug } });
+    res.json({ thong_bao: "Đã cập nhật lượt xem", luot_xem: newLuotXem });
+})
+
+// sản phẩm cùng loại
+app.get("/api/products/same-category/:categoryId", async (req, res) => {
+    try {
+        const categoryId = Number(req.params.categoryId);
+        const limit = Number(req.query.limit) || 4;
+        const offset = Number(req.query.offset) || 0;
+
+        const products = await SanPhamModel.findAll({
+            where: { id_loai: categoryId, an_hien: 1 },
+            order: [literal('RAND()')],
+            offset: offset,
+            limit: limit
+        });
+
+        res.json(products);
+    } catch (error) {
+        console.error("Error fetching products by category:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 app.get("/api/sptrongloai/:id", async (req, res) => {
     const id_loai = Number(req.params.id)

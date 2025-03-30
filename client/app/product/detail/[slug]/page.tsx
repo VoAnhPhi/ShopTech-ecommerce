@@ -3,30 +3,42 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ISanPham } from "@/app/data";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/lib/cartSlice";
 
 // Component hiển thị trang chi tiết sản phẩm
 
 export default function ProductDetail() {
     const params = useParams();
-    let id = params.id;
+    let slug = params.slug;
     const [product, setProduct] = useState<ISanPham | null>(null);
     const [error, setError] = useState<string | null>(null);
-
+    const [product_similar, setProductSimilar] = useState<ISanPham[]>([]);
+    const dispatch = useDispatch();
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/api/sp/${id}`);
+                const res = await fetch(`http://localhost:3000/api/sp/${slug}`);
                 if (!res.ok) {
                     throw new Error("Lỗi khi lấy dữ liệu sản phẩm");
                 }
                 const data = await res.json();
+                const id_loai = data.id_loai;
+                console.log(id_loai);
+
+                const product_similar = await fetch(`http://localhost:3000/api/products/same-category/${id_loai}`);
+                const data_similar = await product_similar.json();
+
                 setProduct(data);
+                setProductSimilar(data_similar);
             } catch (error) {
                 setError(error as string);
             }
         };
         fetchProduct();
-    }, [id]);
+    }, [slug]);
 
     if (error) {
         return (
@@ -114,7 +126,7 @@ export default function ProductDetail() {
 
                     {/* Nút mua hàng */}
                     <div className="flex gap-4">
-                        <button className="flex-1 bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold transition duration-200">
+                        <button className="flex-1 bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold transition duration-200" onClick={()=>dispatch(addToCart(product))}>
                             <i className="fas fa-shopping-cart mr-2"></i>
                             Thêm vào giỏ hàng
                         </button>
@@ -133,6 +145,49 @@ export default function ProductDetail() {
                     <div className="prose max-w-none">{product.mo_ta}</div>
                 </div>
             </div>
+
+            {/* Phần sản phẩm tương tự */}
+            <div className="mt-12">
+                <h2 className="text-2xl font-bold mb-4">Sản phẩm tương tự</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {product_similar.map((sp) => (
+                        <div key={sp.id} className="bg-white p-4 shadow rounded max-w-full">
+                            <img
+                                src={sp.hinh}
+                                alt={sp.ten_sp}
+                                className="w-full h-52 object-cover rounded mb-4 transition-transform duration-300 hover:scale-105"
+                            />
+                            <h3 className="text-base font-bold mt-2 mb-4 hover:text-[#10375C] text-center line-clamp-1">
+                                <Link href={`/product/detail/${sp.id}`}>{sp.ten_sp}</Link>
+                            </h3>
+                            <div className="flex items-center justify-between mb-4">
+                                <p className="text-base font-bold">
+                                    Giá: <span className="text-[#10375C]">{sp.gia_km.toLocaleString("vi-VN")} VNĐ</span>
+                                </p>
+                                <p className="text-base font-bold line-through text-gray-500">
+                                    {sp.gia.toLocaleString("vi-VN")} VNĐ
+                                </p>
+                            </div>
+                            <div className="flex justify-between text-sm text-gray-600">
+                                <p className="font-semibold">Cập Nhật: {sp.ngay}</p>
+                                <p className="font-semibold">Lượt xem: {sp.luot_xem}</p>
+                            </div>
+                            <div className="flex justify-between mt-4">
+                                <button className="bg-[#10375C] text-white px-4 py-2 rounded hover:bg-[#F3C623] hover:text-[#10375C] transition-colors duration-200">
+                                    Mua hàng
+                                </button>
+                                <button
+                                    className="bg-[#F3C623] text-[#10375C] px-4 py-2 rounded hover:bg-[#10375C] hover:text-white transition-colors duration-200"
+                                    onClick={() => dispatch(addToCart(sp))}
+                                >
+                                    Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
         </div>
     );
 }

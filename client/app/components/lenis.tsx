@@ -6,7 +6,7 @@ export default function LenisSmoothScroll() {
         const initLenis = () => {
             if (typeof window !== 'undefined' && window.Lenis) {
                 const lenis = new window.Lenis({
-                    duration: 1,
+                    duration: 0.3,
                     easing: (t: number) => 1 - Math.pow(1 - t, 3),
                     mouseMultiplier: 0.05,
                     touchMultiplier: 0.5,

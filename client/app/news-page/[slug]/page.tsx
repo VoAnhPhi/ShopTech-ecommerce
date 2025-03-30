@@ -3,20 +3,31 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { iTinTuc } from '../../data';
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 export default function NewsDetail() {
   const params = useParams();
   const slug = params.slug as string;
   const [news, setNews] = useState<iTinTuc>();
+  const [news_related, setNewsRelated] = useState<iTinTuc[]>([]);
+
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/news/${slug}`)
       .then(res => res.json())
-      .then(data => setNews(data))
+      .then(data => {
+        setNews(data)
+        const id_loai = data.id_loai
+        fetch(`http://localhost:3000/api/news/related/${data.id_loai}`)
+          .then(res => res.json())
+          .then(data => setNewsRelated(data))
+          .catch(err => console.log(err));
+      })
       .catch(err => console.log(err));
+
+
   }, [slug]);
-  
+
   if (!news) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -74,7 +85,7 @@ export default function NewsDetail() {
             </div>
 
             {/* Content */}
-            <div 
+            <div
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: news?.noi_dung || "" }}
             />
@@ -101,11 +112,11 @@ export default function NewsDetail() {
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6">Bài viết liên quan</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+            {news_related.map((i: iTinTuc) => (
+              <div key={i.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="relative h-48">
                   <Image
-                    src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80"
+                    src={i.hinh}
                     alt="Related article"
                     fill
                     style={{ objectFit: 'cover' }}
@@ -113,8 +124,8 @@ export default function NewsDetail() {
                 </div>
                 <div className="p-4">
                   <h3 className="font-bold mb-2 hover:text-blue-600">
-                    <Link href={`/news/${i}`}>
-                      Bài viết liên quan {i}
+                    <Link href={`/news-page/${i.slug}`}>
+                      Bài viết liên quan {i.tieu_de}
                     </Link>
                   </h3>
                   <p className="text-sm text-gray-600">Ngày đăng: 2023-06-15</p>

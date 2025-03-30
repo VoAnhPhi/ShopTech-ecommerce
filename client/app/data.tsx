@@ -40,6 +40,7 @@ export interface ISanPham {
     gia: number;
     gia_km: number;
     ngay: string;
+    slug: string;
     hinh: string;
     id_loai: number;
     luot_xem: number;

@@ -2,25 +2,52 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { iTinTuc, iLoaiTin } from '../data';
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Pagination from '../components/Pagination';
 
+interface PaginationData {
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
 
 export default function NewsPage() {
   const searchParams = useSearchParams();
+  const newRef = useRef<HTMLDivElement>(null);
   const [loai_tin, setLoaiTin] = useState<iLoaiTin[]>([]);
   const [tin, setTin] = useState<iTinTuc[]>([]);
 
+  const [pagination, setPagination] = useState<PaginationData>({
+    total: 0,
+    totalPages: 0,
+    currentPage: 1,
+    limit: 0,
+  });
 
   useEffect(() => {
+    const currentPage = searchParams.get('page') ? parseInt(searchParams.get('page') as string) : 1;
+    console.log(currentPage);
+    const limit = 10;
+    const offset = (currentPage - 1) * limit;
+
     fetch('http://localhost:3000/api/news/loai_tin')
       .then(res => res.json())
       .then(data => setLoaiTin(data))
       .catch(err => console.log(err));
 
-    fetch('http://localhost:3000/api/news')
+    fetch(`http://localhost:3000/api/news/${limit}/page/${currentPage}`)
       .then(res => res.json())
-      .then(data => setTin(data))
+      .then(data => {
+        setTin(data.news);
+        setPagination(data.pagination);
+        if (currentPage > 1) {
+          setTimeout(() => {
+            newRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }, 100)
+        }
+      })
       .catch(err => console.log(err));
   }, [searchParams]);
 
@@ -142,7 +169,7 @@ export default function NewsPage() {
           </div>
         </div>
 
-        <div>
+        <div ref={newRef} className='pt-26'>
           <h2 className="text-2xl font-bold mb-6 border-b pb-2">Tất Cả Tin Tức</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tin.map((news: iTinTuc) => (
@@ -173,15 +200,13 @@ export default function NewsPage() {
             ))}
           </div>
 
-          <div className="flex justify-center mt-10">
-            <div className="flex space-x-2">
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">Trước</button>
-              <button className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">1</button>
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">2</button>
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">3</button>
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-100">Sau</button>
-            </div>
-          </div>
+          {/* <div className="flex justify-center mt-10"> */}
+          <Pagination
+            totalPages={pagination.totalPages}
+            currentPage={pagination.currentPage}
+            baseUrl="/news-page"
+          />
+          {/* </div> */}
         </div>
       </div>
     </div>

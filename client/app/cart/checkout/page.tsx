@@ -43,32 +43,37 @@ export default function Checkout() {
         let phone = phoneRef.current?.value
 
         if (ht?.trim() == "") {
-            // hotenRef.current!.style.backgroundColor = "yellow";
+            hotenRef.current!.style.backgroundColor = "rgba(247, 55, 79, 0.2)";
             thongbaoRef.current!.innerHTML = "Bạn chưa nhập họ tên"
             hotenRef.current!.focus();
             setSubmitClicked(false);
             setAllowSubmit(true); // Cho thử lại ngay
             return;
-        } else if (email?.trim() == "") {
+        } else hotenRef.current!.style.backgroundColor = "white";
+        if (email?.trim() == "") {
+            emailRef.current!.style.backgroundColor = "rgba(247, 55, 79, 0.2)";
             thongbaoRef.current!.innerHTML = "Bạn chưa nhập email"
             emailRef.current!.focus();
             setSubmitClicked(false);
             setAllowSubmit(true); // Cho thử lại ngay
             return;
-        } else if (phone?.trim() == "") {
+        } else emailRef.current!.style.backgroundColor = "white";
+        if (phone?.trim() == "") {
+            phoneRef.current!.style.backgroundColor = "rgba(247, 55, 79, 0.2)";
             thongbaoRef.current!.innerHTML = "Bạn chưa nhập số điện thoại"
             phoneRef.current!.focus();
             setSubmitClicked(false);
             setAllowSubmit(true); // Cho thử lại ngay
             return;
-        } else if (address?.trim() == "") {
+        } else phoneRef.current!.style.backgroundColor = "white";
+        if (address?.trim() == "") {
+            addressRef.current!.style.backgroundColor = "rgba(247, 55, 79, 0.2)";
             thongbaoRef.current!.innerHTML = "Bạn chưa nhập địa chỉ giao hàng"
             addressRef.current!.focus();
             setSubmitClicked(false);
             setAllowSubmit(true); // Cho thử lại ngay
             return;
-        }
-        // else hotenRef.current!.style.backgroundColor = "white";
+        } else addressRef.current!.style.backgroundColor = "white";
 
         let opt = {
             method: "post",

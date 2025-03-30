@@ -223,7 +223,7 @@ export default function HomePage() {
 
             {sp_moi.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sp_moi.map((sp: ISanPham) => <HomeProduct key={sp.id} sp={sp}></HomeProduct>)}
+                {sp_moi.map((sp: ISanPham) => <HomeProduct key={sp.slug} sp={sp}></HomeProduct>)}
               </div>
             ) : (
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
