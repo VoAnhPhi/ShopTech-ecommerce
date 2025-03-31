@@ -8,7 +8,7 @@ export default function Show1SP(props: any) {
     const dispatch = useDispatch();
 
     return (
-        <div className="bg-white p-4 shadow rounded max-w-screen-xl mx-auto">
+        <div className="bg-white p-4 shadow rounded max-w-screen-xl mx-auto cursor-pointer">
             <img src={sp.hinh} alt="Product" className="w-full h-80 object-contain rounded mb-4 transition-transform duration-300 hover:scale-105" />
             <h3 className="text-lg font-bold mt-2 mb-4 hover:text-blue-500 text-center">
                 <Link href={`/product/detail/${sp.slug}`}>{sp.ten_sp}</Link>
@@ -22,8 +22,8 @@ export default function Show1SP(props: any) {
                 <p className="font-semibold">Lượt xem: {sp.luot_xem}</p>
             </div>
             <div className="flex justify-between mt-4">
-                <button className="bg-[#10375C] text-white px-4 py-2 rounded hover:bg-[#F3C623] hover:text-[#10375C] transition-colors duration-200">Mua hàng</button>
-                <button className="bg-[#F3C623] text-[#10375C] px-4 py-2 rounded hover:bg-[#10375C] hover:text-white transition-colors duration-200" onClick={() => dispatch(addToCart(sp))}>Thêm vào giỏ hàng</button>
+                <button className="bg-[#10375C] text-white px-4 py-2 rounded hover:bg-[#F3C623] hover:text-[#10375C] transition-colors duration-200 cursor-pointer">Mua hàng</button>
+                <button className="bg-[#F3C623] text-[#10375C] px-4 py-2 rounded hover:bg-[#10375C] hover:text-white transition-colors duration-200 cursor-pointer" onClick={() => dispatch(addToCart(sp))}>Thêm vào giỏ hàng</button>
             </div>
         </div>
     );
