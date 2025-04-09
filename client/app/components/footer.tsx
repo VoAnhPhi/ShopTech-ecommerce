@@ -52,22 +52,22 @@ export default function Footer() {
                         <h3 className="text-lg font-semibold text-white mb-4">Liên Kết Nhanh</h3>
                         <ul className="space-y-2">
                             <li>
-                                <Link href="/product" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
+                                <Link href="/main/product" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
                                     Sản Phẩm
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about-page" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
+                                <Link href="/main/about-page" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
                                     Về Chúng Tôi
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/news-page" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
+                                <Link href="/main/news-page" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
                                     Tin Tức
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/contact" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
+                                <Link href="/main/contact-page" className="text-[#F4F6FF] hover:text-[#F3C623] transition-colors duration-200">
                                     Liên Hệ
                                 </Link>
                             </li>

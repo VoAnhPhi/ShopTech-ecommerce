@@ -11,7 +11,7 @@ export default function Header() {
                    
                     <div className="flex items-center">
                         <div className="text-2xl font-bold text-[#10375C]">
-                            <Link href="/">
+                            <Link href="/main">
                                 ShopTech
                             </Link>
                         </div>
@@ -19,16 +19,16 @@ export default function Header() {
 
                 
                     <nav className="flex space-x-8">
-                        <Link href="/" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
+                        <Link href="/main" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
                             Trang chủ
                         </Link>
-                        <Link href="/product" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
+                        <Link href="/main/product" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
                             Sản phẩm
                         </Link>
-                        <Link href="/about-page" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
+                        <Link href="/main/about-page" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
                             Về chúng tôi
                         </Link>
-                        <Link href="/news-page" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
+                        <Link href="/main/news-page" className="text-[#10375C] hover:text-[#F3C623] transition-colors duration-200 font-medium">
                             Tin tức
                         </Link>
                     </nav>
@@ -46,7 +46,7 @@ export default function Header() {
                         </button>
                         <button className="flex items-center space-x-1 bg-[#F3C623] text-[#10375C] hover:bg-[#10375C] hover:text-white px-4 py-2 rounded-full transition-colors duration-200">
                             <FiShoppingCart className="text-xl" />
-                            <Link href="/cart">
+                            <Link href="/main/cart">
                             <span className="hidden md:inline">Giỏ hàng</span>
                             </Link>
                         </button>

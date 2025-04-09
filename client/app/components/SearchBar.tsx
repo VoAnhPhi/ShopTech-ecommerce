@@ -12,7 +12,7 @@ export default function SearchBar() {
     
     if (searchTerm.trim()) {
       // Chuyển hướng đến trang tìm kiếm với từ khóa
-      router.push(`/search?key=${encodeURIComponent(searchTerm.trim())}`);
+      router.push(`/main/search?key=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
 

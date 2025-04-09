@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ISanPham } from "../data";
 import { useDispatch } from "react-redux";
-import { addToCart } from "@/lib/cartSlice";
+import { addToCart } from "../main/lib/cartSlice";
 
 export default function Show1SP(props: any) {
     let sp = props.sp as ISanPham;
@@ -11,7 +11,7 @@ export default function Show1SP(props: any) {
         <div className="bg-white p-4 shadow rounded max-w-screen-xl mx-auto cursor-pointer">
             <img src={sp.hinh} alt="Product" className="w-full h-80 object-contain rounded mb-4 transition-transform duration-300 hover:scale-105" />
             <h3 className="text-lg font-bold mt-2 mb-4 hover:text-blue-500 text-center">
-                <Link href={`/product/detail/${sp.slug}`}>{sp.ten_sp}</Link>
+                <Link href={`/main/product/detail/${sp.slug}`}>{sp.ten_sp}</Link>
             </h3>
             <div className="flex items-center justify-between mb-4">
                 <p className="text-lg font-bold">Giá: <span className="text-red-500">{sp.gia_km.toLocaleString("vi-VN")} VNĐ</span></p>
