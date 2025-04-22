@@ -115,7 +115,9 @@ const UserModel = sequelize.define('users', {
     dia_chi: { type: DataTypes.STRING, require: true },
     dien_thoai: { type: DataTypes.STRING, require: true },
     vai_tro: { type: DataTypes.TINYINT, defaultValue: 0 },
-    khoa: { type: DataTypes.TINYINT, defaultValue: 0 }
+    khoa: { type: DataTypes.TINYINT, defaultValue: 0 },
+    remember_token: { type: DataTypes.STRING, defaultValue: "" },
+    email_verified_at: { type: DataTypes.DATE, defaultValue: null }
 },
     {
         timestamps: true,

@@ -129,6 +129,7 @@ export default function ProductsList() {
 
     return (
         <div className="container mx-auto">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-semibold text-gray-800">Quản lý sản phẩm</h1>
                 <div className="flex space-x-4">

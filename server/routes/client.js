@@ -1,8 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const { LoaiModel, TinTucModel, LoaiTinModel, SanPhamModel, DonHangModel, DonHangChiTietModel } = require("../config/db");
+const { LoaiModel, TinTucModel, LoaiTinModel, SanPhamModel, DonHangModel, DonHangChiTietModel, UserModel } = require("../config/db");
 const { Op } = require("sequelize");
 const { literal } = require("sequelize");
+
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const sendMail = async (to, subject, html) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        }
+    });
+
+    await transporter.sendMail({
+        from: `"ShopTech" <${process.env.EMAIL_USER}>`,
+        to,
+        subject,
+        html,
+    });
+}
 
 // loại sản phẩm {
 router.get("/loai/:id", async (req, res) => {
@@ -22,8 +43,6 @@ router.get("/loai", async (req, res) => {
 })
 
 // loại sản phẩm }
-
-
 
 // sản phẩm {
 
@@ -615,5 +634,219 @@ router.get("/news/loai/:id", async (req, res) => {
     res.json(news_arr);
 })
 // tin tức }
+
+
+//  User {
+router.post("/dangky", async (req, res) => {
+    let { ho_ten, email, mat_khau, dien_thoai, nhap_lai_mat_khau } = req.body
+    const phoneRegex = /^(0(3|5|7|8|9))[0-9]{8}$/;
+
+    // kiểm tra xem email đã tồn tại trong database chưa
+    let  user = await UserModel.findOne({ where: { email: email } })
+    if (user) {
+        res.json({ "thong_bao": "Email đã tồn tại" })
+        return;
+    }
+
+    if (!ho_ten || !email || !mat_khau || !dien_thoai || !nhap_lai_mat_khau) {
+        res.json({ "thong_bao": "Vui lòng nhập đầy đủ thông tin" })
+        return;
+    } else if (mat_khau.length < 6) {
+        res.json({ "thong_bao": "Mật khẩu phải có ít nhất 6 ký tự" })
+        return;
+    } else if (!phoneRegex.test(dien_thoai)) {
+        res.json({ "thong_bao": "Số điện thoại không hợp lệ (Ví dụ: 0909090909) và có 10 số" })
+        return;
+    } else if (nhap_lai_mat_khau !== mat_khau) {
+        res.json({ "thong_bao": "Mật khẩu không khớp" })
+        return;
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const mat_khau_hash = await bcrypt.hash(mat_khau, salt)
+
+    const { v4: uuidv4 } = require('uuid');
+    const token = uuidv4();
+    const link = `http://localhost:3000/api/submit-email/${token}`
+
+    try {
+        await sendMail(
+            email,
+            "Xác nhận đăng ký",
+            `<h3>Chào ${ho_ten}, bạn đã đăng ký thành công.</h3>
+             <p>Vui lòng click vào link sau để xác nhận email: <a href="${link}">Xác nhận email</a></p>`
+        );
+    } catch (err) {
+        console.error("Lỗi gửi mail:", err);
+        return res.status(500).json({ thong_bao: "Gửi email thất bại, vui lòng thử lại sau." });
+    }
+
+
+    user = await UserModel.create({ email: email, mat_khau: mat_khau_hash, ho_ten: ho_ten, dien_thoai: dien_thoai, remember_token: token })
+    console.log("Tạo user thành công:", email);
+    res.status(200).json({
+        thong_bao: "Đã tạo tài khoản",
+        user: user
+    })
+})
+
+router.get("/submit-email/:token", async (req, res) => {
+    const token = req.params.token
+    const user = await UserModel.findOne({ where: { remember_token: token } })
+    if (!user) {
+        return res.status(404).json({ thong_bao: "Token không hợp lệ" })
+    }
+    await UserModel.update({
+        email_verified_at: new Date(),
+        remember_token: null
+    }, { where: { remember_token: token } })
+    return res.status(200).json({ thong_bao: "Email đã được xác nhận" })
+})
+
+router.post("/dangnhap", async (req, res) => {
+    let { email, mat_khau } = req.body
+
+    const user = await UserModel.findOne({ where: { email: email } })
+    if (!user) {
+        return res.status(404).json({ thong_bao: "Email không tồn tại" });
+    }
+
+    let mat_khau_hash = user.mat_khau
+    let isMatch = bcrypt.compareSync(mat_khau, mat_khau_hash)
+    if (!isMatch) {
+        return res.status(403).json({ thong_bao: "Mật khẩu không chính xác" });
+    }
+
+    const privateKey = process.env.JWT_SECRET;
+    if (!privateKey) {
+        return res.status(500).json({ thong_bao: "Không tìm thấy khóa bí mật" });
+    }
+
+    const payload = { id: user.id, email: user.email }
+    const expiresIn = "1h"
+    const bearerToken = jwt.sign(payload, privateKey, {
+        expiresIn: expiresIn,
+        subject: user.id.toString()
+    });
+
+
+    sendMail(email, "Xác nhận đăng nhập", `<h3>Chào ${user.ho_ten}, bạn đã đăng nhập thành công.</h3>`);
+
+    res.status(200).json({
+        "status": 200,
+        "thong_bao": "Đăng nhập thành công",
+        "token": bearerToken,
+        "expiresIn": expiresIn,
+        "user": user
+    })
+})
+
+// cập nhật thông tin tài khoản
+router.post("/capnhat", async (req, res) => {
+    let { email, ho_ten, dien_thoai, dia_chi } = req.body;
+
+    const updateData = {};
+    if (ho_ten && ho_ten.trim() !== "") {
+        updateData.ho_ten = ho_ten;
+    }
+
+    if (dien_thoai && dien_thoai.trim() !== "") {
+        const phoneRegex = /^0(3|5|7|8|9)[0-9]{8}$/;
+        if (!phoneRegex.test(dien_thoai)) {
+            return res.json({ thong_bao: "Số điện thoại không hợp lệ (Ví dụ: 0909090909)" });
+        }
+        updateData.dien_thoai = dien_thoai;
+    }
+
+    if (dia_chi && dia_chi.trim() !== "") {
+        updateData.dia_chi = dia_chi;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+        return res.json({ thong_bao: "Không có trường nào được gửi để cập nhật" });
+    }
+
+    const user = await UserModel.findOne({ where: { email: email } })
+    if (!user) {
+        res.json({ "thong_bao": "Không tìm thấy tài khoản" })
+        return;
+    }
+
+    await UserModel.update(updateData, { where: { email } });
+    sendMail(email, "Xác nhận cập nhật thông tin tài khoản", `<h3>Chào ${user.ho_ten}, bạn đã cập nhật thông tin tài khoản thành công.</h3>`);
+    res.json({ thong_bao: "Đã cập nhật thông tin tài khoản", cap_nhat: updateData });
+})
+
+router.post("/doipass", async (req, res) => {
+    const { email, pass_old, pass_new1, pass_new2 } = req.body;
+    const authHeader = req.headers['authorization'];
+
+    if (!authHeader) {
+        return res.status(403).json({ thong_bao: "Token không hợp lệ" });
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decoded;
+    try {
+        const privateKey = process.env.JWT_SECRET;
+        decoded = jwt.verify(token, privateKey);
+    } catch (err) {
+        return res.status(403).json({ thong_bao: "Token hết hạn hoặc không hợp lệ" });
+    }
+
+    // Kiểm tra email trong token có trùng với email từ client
+    if (decoded.email !== email) {
+        return res.status(403).json({ thong_bao: "Email không trùng khớp với token" });
+    }
+
+    // Tìm người dùng theo email
+    const user = await UserModel.findOne({ where: { email } });
+    if (!user) {
+        return res.status(404).json({ thong_bao: "Không tìm thấy người dùng" });
+    }
+
+    const mk_trongdb = user.mat_khau;
+    const match = bcrypt.compareSync(pass_old, mk_trongdb);
+    if (!match) {
+        return res.status(403).json({ thong_bao: "Mật khẩu cũ không đúng" });
+    }
+
+    if (!pass_new1 || pass_new1 !== pass_new2) {
+        return res.status(400).json({ thong_bao: "2 mật khẩu mới không khớp" });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const mk_mahoa = bcrypt.hashSync(pass_new1, salt);
+
+    await UserModel.update({ mat_khau: mk_mahoa }, { where: { email } });
+    sendMail(email, "Xác nhận đổi mật khẩu", `<h3>Chào ${user.ho_ten}, bạn đã đổi mật khẩu thành công.</h3>`);
+
+    return res.status(200).json({ thong_bao: "Đổi mật khẩu thành công" });
+});
+
+router.post("/quenpass", async (req, res) => {
+    let { email } = req.body;
+    const user = await UserModel.findOne({ where: { email } });
+    if (!user) {
+        return res.status(404).json({ thong_bao: "Không tìm thấy người dùng" });
+    }
+
+    const pass = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const salt = bcrypt.genSaltSync(10);
+    const mk_mahoa = bcrypt.hashSync(pass, salt);
+    await UserModel.update({ mat_khau: mk_mahoa }, { where: { email } });
+
+    sendMail(email, "Xác nhận quên mật khẩu", `<h3>Chào ${user.ho_ten}, bạn đã quên mật khẩu.</h3>
+    <p>Mật khẩu mới của bạn là: ${pass}</p>
+    <p>Vui lòng đổi mật khẩu sau khi đăng nhập</p>
+    <a href="http://localhost:3000/quenpass/${pass}">Đổi mật khẩu</a>
+    `);
+    return res.status(200).json({
+        status: 200,
+        thong_bao: "Đã gửi email xác nhận quên mật khẩu"
+    });
+})
+// user }
+
 
 module.exports = router;

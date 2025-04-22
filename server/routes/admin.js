@@ -7,10 +7,28 @@ const { literal } = require("sequelize");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const nodemailer = require('nodemailer');
+const { serialize } = require('cookie');
 
 const upload = require("../utils/upload");
 const cloudinary = require("../utils/cloudinary");
 
+const sendMail = async (to, subject, html) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        }
+    });
+
+    await transporter.sendMail({
+        from: `"ShopTech" <${process.env.EMAIL_USER}>`,
+        to,
+        subject,
+        html,
+    });
+}
 
 //routes
 router.get("/", async (req, res) => {
@@ -388,7 +406,6 @@ router.get("/product/category/:id/page/:page", async (req, res) => {
         res.status(500).json({ message: "Lỗi server", error: err.message });
     }
 });
-
 
 router.get("/product-da-xoa/page/:page", async (req, res) => {
     try {
@@ -1694,5 +1711,60 @@ router.delete("/order_detail/:id_ct", async (req, res) => {
     }
 });
 // }
+
+// Đăng nhập admin
+router.post("/dangnhap", async (req, res) => {
+    let { email, mat_khau } = req.body
+
+
+    const user = await UserModel.findOne({ where: { email: email } })
+    if (!user) {
+        return res.status(404).json({ thong_bao: "Email không tồn tại" });
+    }
+    console.log(user)
+    if (user.vai_tro !== 1) {
+        return res.status(403).json({ thong_bao: "Bạn không có quyền truy cập vào trang admin" });
+    }
+
+    let mat_khau_hash = user.mat_khau
+    let isMatch = bcrypt.compareSync(mat_khau, mat_khau_hash)
+    if (!isMatch) {
+        return res.status(403).json({ thong_bao: "Mật khẩu không chính xác" });
+    }
+
+    const privateKey = process.env.JWT_SECRET;
+    if (!privateKey) {
+        return res.status(500).json({ thong_bao: "Không tìm thấy khóa bí mật" });
+    }
+
+    const payload = {
+        id: user.id,
+        email: user.email
+    }
+    const expiresIn = "1h"
+    const bearerToken = jwt.sign(payload, privateKey, {
+        expiresIn: expiresIn,
+        subject: user.id.toString()
+    });
+
+
+    sendMail(email, "Xác nhận đăng nhập", `<h3>Chào ${user.ho_ten}, bạn đã đăng nhập thành công.</h3>`);
+
+    const cookie = serialize('role', '1', {
+        path: '/',
+        maxAge: 60 * 60, // 1 giờ
+        sameSite: 'lax',
+    });
+
+    res.setHeader('Set-Cookie', cookie);
+
+    res.status(200).json({
+        "status": 200,
+        "thong_bao": "Đăng nhập thành công",
+        "token": bearerToken,
+        "expiresIn": expiresIn,
+        "user": user
+    })
+})
 
 module.exports = router;

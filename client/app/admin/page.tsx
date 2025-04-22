@@ -9,7 +9,7 @@ import {
     CurrencyDollarIcon,
     ChartBarIcon,
 } from '@heroicons/react/24/outline';
-
+import { ToastContainer } from 'react-toastify';
 interface StatCard {
     title: string;
     value: number | string;
@@ -80,6 +80,8 @@ const recentActivities = [
 export default function AdminPage() {
     return (
         <div className="container mx-auto">
+            <ToastContainer />
+
             <div className="mb-6">
                 <h1 className="text-2xl font-semibold text-gray-800">Trang quản trị</h1>
                 <p className="text-gray-600">Xem tổng quan và quản lý hệ thống</p>

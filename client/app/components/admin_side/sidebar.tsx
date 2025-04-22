@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
 import {
     HomeIcon,
@@ -10,6 +10,7 @@ import {
     XMarkIcon,
     ShoppingCartIcon
 } from '@heroicons/react/24/outline';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface SidebarItem {
     name: string;
@@ -19,6 +20,32 @@ interface SidebarItem {
 
 const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [btnText, setBtnText] = useState<string | null>(null);
+    const [isClient, setIsClient] = useState(false);
+
+    useLayoutEffect(() => {
+        setIsClient(true);
+        const role = localStorage.getItem('vai_tro');
+        if (role === '1') {
+            setBtnText("Đăng Xuất");
+        } else {
+            setBtnText("Đăng Nhập");
+        }
+    }, []);
+
+
+    const handleLogout = () => {
+        const role = document.cookie.split('; ').find(row => row.startsWith('role='));
+        const isAdmin = role?.split('=')[1] === '1';
+
+        if (isAdmin) {
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            localStorage.clear();
+            setBtnText("Đăng Nhập");
+            window.location.href = "/admin/admin-login";
+        }
+    }
 
     const sidebarItems: SidebarItem[] = [
         {
@@ -55,6 +82,7 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-100">
+            <ToastContainer />
             {/* Mobile sidebar overlay */}
             {sidebarOpen && (
                 <div
@@ -131,6 +159,11 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             </button>
                         </div>
                     </div>
+                    {btnText !== null && isClient && (
+                        <button className="ml-4 px-4 py-2 text-sm font-medium text-gray-500 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={handleLogout}>
+                            {btnText}
+                        </button>
+                    )}
                 </header>
 
                 {/* Main content */}
